@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link   href="../static/js/jquery-treetable/css/jquery.treetable.css" rel="stylesheet" tyle="text/css">
+<link   href="../static/js/jquery-treetable/css/jquery.treetable.theme.default.css" rel="stylesheet" tyle="text/css">
+<link   href="../static/js/jquery-treetable/css/screen.css" rel="stylesheet" media="screen">
+<style type="text/css">
+div#top{width:800px;height:50px;background-color:#99bbbb;margin:0 auto;text-align:center;}
+div#box{width:800px;height:450px;margin:0 auto;background-color:#99bbbb;text-align:center;}
+
+div#right{height:450px;width:625px;background-color:#FAFAD2;float:left;}
+h1 {margin-bottom:0;}
+        table{font-size:12px;}  
+        table.treetable thead tr th,table.treetable tbody tr td{padding:10px 1em;}  
+        table.treetable tbody tr td{border-top:0px solid #ccc;}  
+        table tr:hover{background:#87CEEB !important;}  
+</style>
+<script type="text/javascript" src="../static/js/Highcharts-4.1.5/api/js/jquery.min.js"></script>
+<script src="../static/js/jquery-treetable/jquery.treetable.js"></script>
+<script type="text/javascript" src="../static/js/layer-v1.9.3/layer/layer.js"></script>
+<script type="text/javascript" src="../static/js/layer-v1.9.3/layer/extend/layer.ext.js"></script>
+<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../static/css/bootstrap.css" rel="stylesheet">
+<link href="../static/css/flat-ui.min.css" rel="stylesheet">
+<link href="../static/css/flat-ui.css" rel="stylesheet">
+<script>
+
+
+
+layer.config({
+    extend: 'extend/layer.ext.js' 
+});
+//$("#dem").val(100);
+$(document).ready(function(){
+ 
+$("#btregister").click(function(){
+        layer.open({
+        title:['用户注册','font-size:18px;'],
+        skin:'layui-layer-molv',
+        offset: ['100px'],
+        btn: ['确定','取消'],
+        type: 2,
+        area: ['500px', '300px'],
+        fix: true, //不固定
+        maxmin: false,
+        content:'register',
+        yes: function(index, layero){ 
+                var body = layer.getChildFrame('body', index);
+                console.log(body.html());
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                //var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                //body.getElementById('timeconst').value;
+                var name=body.find('#username').val();
+                var passwd=body.find('#passwd').val();
+                var repasswd=body.find('#repasswd').val();
+                if (passwd != repasswd)
+                    layer.alert('密码不一致', {icon: 6});
+                $.ajax({  
+                    type:"get",  
+                    url: "reg", 
+                    contentType:"application/json; charset=utf-8",  
+                    dataType:"json", 
+                    cache:true, 
+                    data: {"name":name,"passwd":passwd},
+                    //成功获取数据  
+                    success:function (data){
+                        
+                        },  
+                    //显示错误                                         
+                    error:function (err){  
+                        
+                        }
+                    });
+
+                parent.layer.close(index); //再执行关闭 
+                
+                //var html='<tr data-tt-id="" data-tt-parent-id=deviceID1 ><td>'+str+'</td></tr>';
+
+    },
+        cancel: function(index, layero){
+
+        }
+
+    });
+});
+
+$("#btlogin").click(function(){
+        layer.open({
+        title:['用户登录','font-size:18px;'],
+        skin:'layui-layer-molv',
+        offset: ['100px'],
+        btn: ['确定','取消'],
+        type: 2,
+        area: ['500px', '300px'],
+        fix: true, //不固定
+        maxmin: false,
+        content:'login',
+        yes: function(index, layero){ 
+                var body = layer.getChildFrame('body', index);
+                console.log(body.html());
+                var iframeWin = window[layero.find('iframe')[0]['name']];
+                //var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                //body.getElementById('timeconst').value;
+                var name=body.find('#username').val();
+                var passwd=body.find('#passwd').val();
+                console.log(name);
+                console.log(passwd);
+                $.ajax({  
+                    type:"get",  
+                    url: "ConfirmUsers", 
+                    contentType:"application/json; charset=utf-8",  
+                    dataType:"json", 
+                    cache:true, 
+                    data: {"name":name,"passwd":passwd},
+                    //成功获取数据  
+                    success:function (data){
+                        if(data.result==1)
+                            //document.getElementById("div1").style.display = "";
+                        {
+                            //window.open("/loginsucceed");
+                            document.getElementById("div1").style.display = "";
+                            $.ajax({
+                                    type:"get",  
+                                    url: "getUsers", 
+                                    contentType:"application/json; charset=utf-8",  
+                                    dataType:"json", 
+                                    cache:true, 
+                                    success:function (data){
+                                     console.log(data.doc);
+                                     for(var i=0;i<data.len;i++)
+                                     {
+                                        
+                                      var id = i;
+                                      var name = data.doc[i]["username"];
+                                     
+                                      var passwd = data.doc[i]["passwd"];
+
+                                      var tr = document.createElement("TR");
+                                      var td = document.createElement("TD");
+                                      var check=document.createElement("input");
+                                      check.setAttribute("type","checkbox"); 
+                                      check.setAttribute("name", "check");
+                                      
+                                      check.setAttribute("value", name);
+
+                                      td.innerText = id;
+                                      td.appendChild(check);
+                                      tr.appendChild(td);
+                  
+                                      td = document.createElement("TD");
+                                      td.innerText = name;
+                                      tr.appendChild(td);
+
+                                      td = document.createElement("TD");
+                                      td.innerText = passwd;
+                                      tr.appendChild(td);
+
+                                      td = document.createElement("TD");
+                        
+
+                                      var tbody = document.getElementById("main");
+                                      tbody.appendChild(tr);
+                                     }
+                                     
+                                    },
+                                    error:function (err){  
+                                    
+                                    }
+
+                            });
+                       
+                       window.setInterval(GetUsers,5000);
+
+                        }  
+                        if(data.result==0)
+                            layer.alert('用户名或密码错误', {icon: 6});
+                        },  
+                    //显示错误                                         
+                    error:function (err){  
+                        
+                        }
+                    });
+                parent.layer.close(index); //再执行关闭 
+                
+                
+
+    },
+        cancel: function(index, layero){
+
+        }
+
+    });
+});   
+
+function GetUsers(){
+    var table = document.getElementById("table1");
+    var trs = table.getElementsByTagName("tr");
+
+//这个名字随意取，和实际的table名字一致即可
+for(var i = trs.length - 1; i > 0; i--) {
+        table.deleteRow(i);
+    }
+
+                               $.ajax({
+                                    type:"get",  
+                                    url: "getUsers", 
+                                    contentType:"application/json; charset=utf-8",  
+                                    dataType:"json", 
+                                    cache:true, 
+                                    success:function (data){
+                                     console.log(data.doc);
+                                     
+                                     for(var i=0;i<data.len;i++)
+                                     {
+                                        
+                                      var id = i;
+                                      var name = data.doc[i]["username"];
+                                     
+                                      var passwd = data.doc[i]["passwd"];
+
+                                      var tr = document.createElement("TR");
+                                      var td = document.createElement("TD");
+                                      var check=document.createElement("input");
+                                      check.setAttribute("type","checkbox"); 
+                                      check.setAttribute("name", "check");
+                                      check.setAttribute("value", i);
+                                      check.setAttribute("value", name);
+                                      td.innerText = id;
+                                      td.appendChild(check);
+                                      tr.appendChild(td);
+                  
+                                      td = document.createElement("TD");
+                                      td.innerText = name;
+                                      tr.appendChild(td);
+
+                                      td = document.createElement("TD");
+                                      td.innerText = passwd;
+                                      tr.appendChild(td);
+
+                                      td = document.createElement("TD");
+                        
+
+                                      var tbody = document.getElementById("main");
+                                      tbody.appendChild(tr);
+                                     }
+                                     
+                                    },
+                                    error:function (err){  
+                                    
+                                    }
+
+                            });
+
+};
+
+//window.setInterval(GetUsers,5000);
+$("#del").click(function(){
+     var table = document.getElementById("table1");
+     var trs = table.getElementsByTagName("tr");
+
+
+    var check = document.getElementsByName("check");
+    //console.log(check1[0].checked);
+    var len=check.length;
+    var idAll="";
+
+    for(var i = 0; i<len; i++){
+    console.log(check[i].value);
+    if (check[i].checked)
+    {
+      //console.log(check1[i].value);
+      idAll+=check[i].value+"#";
+
+     // $(":checkbox:checked").remove();
+     //check1[i].parentNode.removeChild(check1[i]);
+    //  table.deleteRow(check1[i].value);
+    }
+    else
+        continue
+};
+
+console.log(idAll);
+ $.ajax({
+        type:"get",  
+        url: "delusers", 
+        contentType:"application/json; charset=utf-8",  
+        dataType:"json", 
+        cache:true, 
+        data: {"name":idAll},
+        success:function (data){
+                              
+                                     
+        },
+        error:function (err){  
+                                    
+        }
+
+    });
+
+});
+
+//重置密码
+$("#resetpwd").click(function(){
+    var check = document.getElementsByName("check");
+    //console.log(check1[0].checked);
+    var len=check.length;
+    var name="";
+
+    for(var i = 0; i<len; i++){
+    console.log(check[i].value);
+    if (check[i].checked)
+    {
+      
+      name=check[i].value;
+    }
+    }
+     $.ajax({
+        type:"get",  
+        url: "resetpwd", 
+        contentType:"application/json; charset=utf-8",  
+        dataType:"json", 
+        cache:true, 
+        data: {"name":name},
+        success:function (data){
+                                    
+                                     
+        },
+        
+        error:function (err){  
+                                    
+        }
+
+    });
+
+
+});
+
+
+});
+
+
+</script>
+
+</head>
+
+<body>
+<div id="top">
+<h3>Welcome to my page!</h3>
+</div>
+<div id="box">
+<br>
+<button id="btlogin" name="GradButton"class="btn btn-primary btn-sm"style="height:27px;width:50px;">登录</button>
+<button id="btregister" name="GradButton"class="btn btn-primary btn-sm"style="height:27px;width:50px;">注册</button>
+<br><br>
+<button id="del" class="btn btn-primary btn-sm"style="height:27px;width:80px;">删除用户</button>
+<button id="resetpwd" class="btn btn-primary btn-sm"style="height:27px;width:80px;">重置密码</button>
+               <div id ="div1"style="text-align:center;vertical-align:middle;display:none;">
+                     <table id="table1"align="center">   
+                           <thead>
+                                 <tr style="text-align:center;vertical-align:middle;">
+
+                                       <td width = "100px">编号</td>
+                                       <td width = "100px">用户名</td>
+                                       <td width = "100px">密码</td>
+                                       
+                                 </tr>
+                           </thead>
+                           <tbody id = "main">
+                                 <tr>
+
+                                       <td></td>
+                                 </tr>
+                           </tbody>
+                           <tfoot></tfoot>
+                     </table>
+               </div>
+</div>
+</body>
+</html>

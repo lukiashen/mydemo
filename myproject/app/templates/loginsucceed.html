@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link   href="../static/js/jquery-treetable/css/jquery.treetable.css" rel="stylesheet" tyle="text/css">
+<link   href="../static/js/jquery-treetable/css/jquery.treetable.theme.default.css" rel="stylesheet" tyle="text/css">
+<link   href="../static/js/jquery-treetable/css/screen.css" rel="stylesheet" media="screen">
+<style type="text/css">
+div#top{margin:0 auto;text-align:center;}
+div#box{margin:0 auto;text-align:center;}
+input#username{height: 25px;width:100px;display:inline;}
+input#passwd{height: 25px;width:100px;display:inline;}
+input#repasswd{height: 25px;width:100px;display:inline;}
+     
+</style>
+<script type="text/javascript" src="../static/js/Highcharts-4.1.5/api/js/jquery.min.js"></script>
+<script src="../static/js/jquery-treetable/jquery.treetable.js"></script>
+<script type="text/javascript" src="../static/js/layer-v1.9.3/layer/layer.js"></script>
+<script type="text/javascript" src="../static/js/layer-v1.9.3/layer/extend/layer.ext.js"></script>
+<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+<link href="../static/css/bootstrap.css" rel="stylesheet">
+<link href="../static/css/flat-ui.min.css" rel="stylesheet">
+<link href="../static/css/flat-ui.css" rel="stylesheet">
+<script>
+
+
+
+layer.config({
+    extend: 'extend/layer.ext.js' 
+});
+//$("#dem").val(100);
+$(document).ready(function(){
+ 
+function Init()
+            {
+                  var infors=ajaxEmployee.ReaderInfor().value;
+                  for(var i = 0;i<infors.length;i++)
+                  {
+                        var emInfor = infors[i];
+                        var id = emInfor[0];
+                        var name = emInfor[1];
+                        var sex = emInfor[2];
+                        var branch = emInfor[3];
+
+                        var tr = document.createElement("TR");
+                        var td = document.createElement("TD");
+                        td.innerText = id;
+                        tr.appendChild(td);
+                  
+                        td = document.createElement("TD");
+                        td.innerText = name;
+                        tr.appendChild(td);
+
+                        td = document.createElement("TD");
+                        td.innerText = sex;
+                        tr.appendChild(td);
+
+                        td = document.createElement("TD");
+                        td.innerText = branch;
+                        tr.appendChild(td);
+
+                        var tbody = document.getElementById("main");
+                        tbody.appendChild(tr);
+                  }
+            }
+
+});
+</script>
+
+</head>
+
+<body onload = "Init()">
+<div id="top">
+
+</div>
+<div id="box"style="text-align:center;vertical-align:middle;">
+
+         <div id ="div1"style="text-align:center;vertical-align:middle;">
+                     <table align="center">   
+                           <thead>
+                                 <tr style="text-align:center;vertical-align:middle;">
+                                       <td width = "100px">编号</td>
+                                       <td width = "100px">用户名</td>
+                                       <td width = "100px">密码</td>
+                                       
+                                 </tr>
+                           </thead>
+                           <tbody id = "main">
+                                 <tr>
+                                       <td></td>
+                                 </tr>
+                           </tbody>
+                           <tfoot></tfoot>
+                     </table>
+               </div>
+</div>
+</body>
+</html>
